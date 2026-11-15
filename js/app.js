@@ -460,6 +460,10 @@
     sheet.style.transform = "";
     if (d === "half" && currentView === "map" && activeGenre) setTimeout(() => scrollToGenre(activeGenre), 60);
   }
+  /* like map apps: scrolling the content of a half-height sheet expands it to full height */
+  const expandOnScroll = pg => pg.addEventListener("scroll", () => {
+    if (isMobile() && sheet.dataset.detent === "half" && pg.scrollTop > 24) setDetent("full");
+  }, { passive: true });
   let sd = null;
   sheet.addEventListener("pointerdown", e => {
     if (!isMobile() || !sheetOpen()) return;
@@ -498,6 +502,7 @@
     if (sheetOpen()) pg.classList.add(dir === "back" ? "in-l" : "in-r");
     else if (isMobile()) setDetent(currentView === "map" && entry.type === "genre" ? "half" : "full");
     sheetBody.append(pg);
+    expandOnScroll(pg);
 
     sheet.classList.add("open");
     sheet.setAttribute("aria-hidden", "false");
