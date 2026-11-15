@@ -136,7 +136,7 @@ main { height: calc(100dvh - var(--top-h)); position: relative; }
 
 .edges { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
 /* links stay quiet and neutral; colour appears only on the selected genre's direct links */
-.edges path { fill: none; stroke: #D4D4D4; stroke-width: 1; opacity: .55; transition: opacity .25s, stroke .25s, stroke-width .25s; }
+.edges path { fill: none; stroke: #D4D4D4; stroke-width: 1; opacity: .4; transition: opacity .25s, stroke .25s, stroke-width .25s; }
 .map-inner.focus .edges path { opacity: .1; }
 .map-inner.focus .edges path.lit { stroke: var(--c); opacity: 1; }
 .map-inner.focus .edges path.in { stroke-width: 2.6; }
