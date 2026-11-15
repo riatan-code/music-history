@@ -882,3 +882,9 @@ body .island.pip.snap .isl-video { transition: height .45s var(--out); }
   .side-letter { font-size: 72px; }
   .side-head h3 { font-size: 22px; }
 }
+
+/* room under the map for the phone bottom sheet (see setDetent) */
+.map-spacer { height: 0; }
+@media (max-width: 760px) {
+  body.sheet-open .map-spacer { height: var(--sheet-vis, 0px); }
+}

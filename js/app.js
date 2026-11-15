@@ -458,6 +458,9 @@
     sheet.dataset.detent = d;
     sheet.style.setProperty("--half", halfOff() + "px");
     sheet.style.transform = "";
+    /* like map apps' bottom-sheet padding: the map gains room equal to the sheet's visible
+       height, so genres hidden behind the sheet can be scrolled up into view */
+    document.documentElement.style.setProperty("--sheet-vis", sheetVisible() + "px");
     if (d === "half" && currentView === "map" && activeGenre) setTimeout(() => scrollToGenre(activeGenre), 60);
   }
   /* like map apps: scrolling the content of a half-height sheet expands it to full height */
