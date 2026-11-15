@@ -278,69 +278,6 @@
     mapScroll.scrollTo({ left: Math.max(0, left), top: Math.max(0, top), behavior: smooth ? "smooth" : "auto" });
   }
 
-  /* ───────── tuner (scrubber) ───────── */
-  const dial = $(".dial"), dialSvg = $(".dial-svg"), dialWin = $(".dial-window"), readout = $(".readout-digits");
-  const ERAS = [[800, "中世"], [1430, "ルネサンス"], [1600, "バロック"], [1750, "古典派"], [1820, "ロマン派"], [1900, "1900"], [1925, "’25"], [1950, "1950"], [1975, "’75"], [2000, "2000"], [2020, "’20"]];
-
-  function drawTuner() {
-    const w = dial.clientWidth, H = dial.clientHeight, k = w / M.W;
-    let s = "";
-    for (let y = 800; y <= 2020; y += (y < 1900 ? 50 : 5)) {
-      const x = nodeX(y) * k;
-      const major = y < 1900 ? y % 200 === 0 : y % 10 === 0;
-      s += `<line class="tick${major ? " major" : ""}" x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${H - (major ? 18 : 12)}" y2="${H - 6}"/>`;
-    }
-    let lastX = -999;
-    ERAS.forEach(([y, label]) => {
-      const x = nodeX(y) * k;
-      const minGap = label.length > 3 ? 54 : 34;
-      if (x - lastX < minGap) return;
-      lastX = x;
-      const era = !/^\d|’/.test(label);
-      s += `<text class="${era ? "era" : ""}" x="${x.toFixed(1)}" y="${H / 2 - 2}" text-anchor="middle">${label}</text>`;
-    });
-    dialSvg.innerHTML = s;
-    updateTuner();
-  }
-
-  let lastRead = "";
-  function setReadout(digits, suffix) {
-    const key = digits + suffix;
-    if (key === lastRead) return;
-    const cols = $$(".roll", readout);
-    if (cols.length !== digits.length || readout.dataset.suffix !== suffix) {
-      readout.innerHTML = [...digits].map(() =>
-        `<span class="roll"><span>${"0123456789".split("").map(d => `<b>${d}</b>`).join("")}</span></span>`).join("") +
-        `<span class="suffix">${suffix}</span>`;
-      readout.dataset.suffix = suffix;
-      readout.offsetWidth; // flush so first roll animates
-    }
-    $$(".roll > span", readout).forEach((el, i) => { el.style.transform = `translateY(${-(+digits[i]) * 1.15}em)`; });
-    lastRead = key;
-  }
-
-  function updateTuner() {
-    const k = dial.clientWidth / M.W;
-    const vw = visibleW();
-    dialWin.style.left = (mapScroll.scrollLeft * k) + "px";
-    dialWin.style.width = Math.max(14, vw * k) + "px";
-    const center = mapScroll.scrollLeft + M.labelW + (vw - M.labelW) / 2;
-    const y = ys(center - M.labelW - M.pad);
-    if (y >= 1900) setReadout(String(Math.floor(y / 10) * 10), "s");
-    else setReadout(String(Math.floor(y / 100) + 1), "世紀");
-  }
-
-  let dialDrag = false;
-  function dialTo(e) {
-    const r = dial.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width * M.W;
-    mapScroll.scrollLeft = x - visibleW() / 2;
-  }
-  dial.addEventListener("pointerdown", e => { dialDrag = true; dial.setPointerCapture(e.pointerId); dialTo(e); });
-  dial.addEventListener("pointermove", e => { if (dialDrag) dialTo(e); });
-  dial.addEventListener("pointerup", () => { dialDrag = false; });
-  dial.addEventListener("pointercancel", () => { dialDrag = false; });
-  mapScroll.addEventListener("scroll", () => requestAnimationFrame(updateTuner), { passive: true });
 
   /* ───────── text effects ───────── */
   const roll = (txt) => `<span class="r"><span><b>${esc(txt)}</b><b>${esc(txt)}</b></span></span>`;
@@ -572,7 +509,6 @@
     setActive(gid);
     markPlaying();
     history.replaceState(null, "", `#${entry.type === "genre" ? "g" : "a"}/${entry.id}`);
-    requestAnimationFrame(updateTuner);
   }
 
   function go(entry, { reset = false } = {}) {
@@ -599,7 +535,6 @@
     setActive(null);
     history.replaceState(null, "", location.pathname + location.search);
     setTimeout(() => { if (!sheetOpen()) sheetBody.innerHTML = ""; }, 600);
-    requestAnimationFrame(updateTuner);
   }
   $(".sheet-back").addEventListener("click", back);
   $(".sheet-close").addEventListener("click", closeSheet);
@@ -1167,7 +1102,7 @@
   mapInner.classList.add("intro");
   buildCrate();
   buildToc();
-  const relayout = () => { layoutMap(); drawTuner(); movePill(); };
+  const relayout = () => { layoutMap(); movePill(); };
   relayout();
   setTimeout(() => {
     mapInner.classList.remove("intro");

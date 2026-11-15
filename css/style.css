@@ -15,7 +15,7 @@
   --f-mono: "DM Mono", ui-monospace, monospace;
   --f-sleeve: "Archivo Black", "Zen Kaku Gothic New", sans-serif;
   --top-h: 60px;
-  --tuner-h: 64px;
+  
   --sheet-w: 420px;
   color-scheme: light;
 }
@@ -94,45 +94,9 @@ main { height: calc(100dvh - var(--top-h)); position: relative; }
 .view { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .35s, visibility 0s .35s; }
 .view.is-active { opacity: 1; visibility: visible; transition: opacity .35s; }
 
-/* ───────── tuner (scrubber) ───────── */
-.tuner {
-  height: var(--tuner-h);
-  display: flex; align-items: stretch;
-  border-bottom: 1px solid var(--line);
-  background: var(--paper-2);
-  user-select: none;
-}
-.readout {
-  width: 132px; flex: none;
-  display: flex; align-items: center; justify-content: center;
-  border-right: 1px solid var(--line);
-  font-family: var(--f-mono); font-weight: 500; font-size: 26px; letter-spacing: -.02em;
-  color: var(--ink);
-}
-.readout-digits { display: inline-flex; height: 1.15em; overflow: hidden; line-height: 1.15; }
-.roll { display: inline-block; width: .62em; text-align: center; position: relative; height: 1.15em; overflow: hidden; }
-.roll > span { display: flex; flex-direction: column; transition: transform .55s var(--spring); }
-.roll > span > b { font-weight: 500; height: 1.15em; }
-.readout-digits .suffix { font-size: .5em; align-self: flex-end; margin-left: 2px; color: var(--mute); line-height: 2.2; }
-
-.dial { position: relative; flex: 1; cursor: ew-resize; touch-action: none; overflow: hidden; }
-.dial-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.dial-svg .tick { stroke: var(--ink); stroke-width: 1; opacity: .28; }
-.dial-svg .tick.major { opacity: .7; }
-.dial-svg text { font-family: var(--f-mono); font-size: 10px; fill: var(--ink-2); }
-.dial-svg text.era { font-family: var(--f-body); font-size: 11px; font-weight: 500; fill: var(--ink); }
-.dial-window {
-  position: absolute; top: 6px; bottom: 6px; left: 0;
-  border-radius: 8px;
-  background: rgba(13, 153, 255, .08);
-  box-shadow: inset 0 0 0 1.5px #0D99FF;
-  pointer-events: none;
-}
-.dial-needle { position: absolute; top: -2px; bottom: -2px; left: 50%; width: 2px; margin-left: -1px; background: var(--accent); border-radius: 2px; }
-
 /* ───────── map ───────── */
 .map-scroll {
-  height: calc(100% - var(--tuner-h));
+  height: 100%;
   background: var(--paper-2);
   overflow: auto;
   scrollbar-width: none;
@@ -172,8 +136,8 @@ main { height: calc(100dvh - var(--top-h)); position: relative; }
 
 .edges { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
 /* links stay quiet and neutral; colour appears only on the selected genre's direct links */
-.edges path { fill: none; stroke: #C9C9C9; stroke-width: 1; opacity: .7; transition: opacity .25s, stroke .25s, stroke-width .25s; }
-.map-inner.focus .edges path { opacity: .18; }
+.edges path { fill: none; stroke: #D4D4D4; stroke-width: 1; opacity: .55; transition: opacity .25s, stroke .25s, stroke-width .25s; }
+.map-inner.focus .edges path { opacity: .1; }
 .map-inner.focus .edges path.lit { stroke: var(--c); opacity: 1; }
 .map-inner.focus .edges path.in { stroke-width: 2.6; }
 .map-inner.focus .edges path.out { stroke-width: 2; stroke-dasharray: 6 5; stroke-linecap: round; animation: flow 1.1s linear infinite; }
@@ -645,14 +609,13 @@ body .island.pip.snap .isl-video { transition: height .45s var(--out); }
 
 /* ───────── small screens ───────── */
 @media (max-width: 760px) {
-  :root { --top-h: 54px; --tuner-h: 52px; --sheet-w: 100vw; }
+  :root { --top-h: 54px;  --sheet-w: 100vw; }
   .top { padding: 0 12px; grid-template-columns: auto 1fr auto; gap: 10px; }
   .tabpill { justify-self: center; }
   .tabpill button { padding: 5px 12px; font-size: 12.5px; }
   .brand-ja { display: none; }
   .search-btn kbd { display: none; }
   .search-btn { padding: 8px; }
-  .readout { width: 76px; font-size: 18px; }
   .lane-label { padding-left: 10px; white-space: normal; }
   .lane-label .lg { font-size: 10px; gap: 5px; }
   .view-crate { padding: 0 16px 130px; }
@@ -772,7 +735,6 @@ body .island.pip.snap .isl-video { transition: height .45s var(--out); }
   .tabbar button:active svg { transform: scale(.88); }
 
   /* map */
-  .readout { width: 72px; font-size: 17px; }
   .ll-full { display: none; }
   .ll-short { display: inline; }
   .lane-label { padding-left: 10px; white-space: nowrap; }
