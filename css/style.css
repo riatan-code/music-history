@@ -136,7 +136,7 @@ main { height: calc(100dvh - var(--top-h)); position: relative; }
 
 .edges { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
 /* links stay quiet and neutral; colour appears only on the selected genre's direct links */
-.edges path { fill: none; stroke: #D4D4D4; stroke-width: 1; opacity: .4; transition: opacity .25s, stroke .25s, stroke-width .25s; }
+.edges path { fill: none; stroke: #D4D4D4; stroke-width: 1; opacity: .25; transition: opacity .25s, stroke .25s, stroke-width .25s; }
 .map-inner.focus .edges path { opacity: .1; }
 .map-inner.focus .edges path.lit { stroke: var(--c); opacity: 1; }
 .map-inner.focus .edges path.in { stroke-width: 2.6; }
@@ -164,13 +164,24 @@ main { height: calc(100dvh - var(--top-h)); position: relative; }
   transition: transform .4s var(--spring), box-shadow .25s;
 }
 .disc::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--c); }
+/* label halo, as map apps do for place names on top of roads: a white rim around the glyphs
+   hides any line passing behind the text */
+.node .nm, .node .yr {
+  text-shadow:
+    0 0 1px #fff, 0 0 2px #fff, 0 0 3px #fff,
+    1px 0 0 #fff, -1px 0 0 #fff, 0 1px 0 #fff, 0 -1px 0 #fff,
+    1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+}
 .node .nm { display: block; font-size: 12.5px; font-weight: 700; line-height: 1.2; letter-spacing: .01em; }
 .node .yr { display: block; font-family: var(--f-mono); font-size: 9.5px; color: var(--mute); line-height: 1.25; margin-top: 1px; }
 .node:hover { background: rgba(255, 255, 255, .95); }
 .node:hover .disc { transform: scale(1.2); }
-.map-inner.focus .node { opacity: .35; filter: grayscale(1); }
-.map-inner.focus .node.lit { filter: none; }
-.map-inner.focus .node.lit { opacity: 1; }
+/* fade unrelated genres by colour, not opacity, so their white label halo stays solid
+   and links passing behind them never show through the text */
+.map-inner.focus .node:not(.lit) .nm { color: #BDBDBD; }
+.map-inner.focus .node:not(.lit) .yr { color: #D0D0D0; }
+.map-inner.focus .node:not(.lit) .disc::after { background: #D6D6D6; }
+.map-inner.focus .node:not(.lit) .disc { box-shadow: 0 0 0 1px rgba(0,0,0,.05); }
 .node.active .disc { transform: scale(1.3); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4.5px var(--c); }
 .node.active { background: var(--paper-2); box-shadow: var(--shadow); }
 .node.playing .disc { animation: dotpulse 1.6s var(--out) infinite; }
