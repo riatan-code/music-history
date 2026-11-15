@@ -267,7 +267,8 @@
     }
   }, { passive: false });
 
-  const visibleW = () => mapScroll.clientWidth - (sheetOpen() && !isMobile() ? parseFloat(getComputedStyle(sheet).width) + 24 : 0);
+  /* the panel now shrinks the content area itself, so the map's own width is what is visible */
+  const visibleW = () => mapScroll.clientWidth;
 
   function scrollToGenre(id, smooth = true) {
     const g = G[id];
@@ -579,7 +580,11 @@
     if (top && top.type === entry.type && top.id === entry.id) return;
     if (reset || !sheetOpen()) stack = [entry]; else stack.push(entry);
     render(entry, "push");
-    if (entry.type === "genre" && currentView === "map") scrollToGenre(entry.id);
+    if (entry.type === "genre" && currentView === "map") {
+      scrollToGenre(entry.id);
+      /* the map narrows while the panel docks in; centre again once that has finished */
+      setTimeout(() => scrollToGenre(entry.id), 480);
+    }
   }
   function back() {
     if (stack.length < 2) return;
