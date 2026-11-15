@@ -478,7 +478,7 @@
     }).join("");
     return h(`<div class="pg" style="${cv(laneC(g))}">
       <div class="g-head">
-        <div class="g-meta"><span class="g-side">SIDE ${g.chapter.side} · ${g.code}</span><span>${esc(g.era)}</span></div>
+        <div class="g-meta"><span class="g-side">${g.code}</span><span>${esc(g.era)}</span></div>
         <h2 class="g-title">${esc(g.ja)}</h2>
         <div class="g-en">${esc(g.en)}</div>
       </div>
@@ -673,7 +673,7 @@
           return `<li data-g="${g.id}">
             <button class="tl-row" data-open="${g.id}">
               <span class="tl-no">${g.code}</span>
-              <span><span class="tl-name"><b>${esc(g.ja)}</b><span class="en">${esc(g.en)}</span></span>${from ? `<span class="tl-from">${ICON.from}${from}</span>` : ""}</span>
+              <span><span class="tl-name"><b>${esc(g.ja)}</b></span>${from ? `<span class="tl-from">${ICON.from}${from}</span>` : ""}</span>
               <span class="tl-art">${names}</span>
               <span class="tl-era">${esc(g.era)}</span>
             </button>
@@ -688,9 +688,8 @@
             </div>
             <div class="side-stack">${pick.map(id => `<span class="s">${sleeve(A[id])}</span>`).join("")}</div>
           </div>
-          <div class="tl-cols" aria-hidden="true"><span>#</span><span>ジャンル</span><span>アーティスト</span><span>年代</span></div>
           <ol class="tl">${rows}</ol>
-          <div class="tl-total"><span>SIDE ${ch.side}</span><span>${gs.length} genres · ${arts.length} artists</span></div>
+          <div class="tl-total"><span>${gs.length} genres · ${arts.length} artists</span></div>
         </section>`;
       }).join("");
     tocSide.insertAdjacentHTML("beforeend", CHAPTERS.map(ch =>
